@@ -1,0 +1,16 @@
+@startuml
+!include ../../C4/C4_Context.puml
+
+System(app, "Smart Home App")
+System_Ext(sensors, "Sensors", "Датчики с системы, установленные у пользователя")
+Person(user, "Customer", "Пользователи системы 'Умный дом'", $sprite="person")
+System_Ext(front, "Web App", "Веб клиент для управления умным домом")
+
+
+Rel(sensors, user, "Считывание показателей")
+Rel(app, sensors, "Запрос показателей, выставление настроек")
+Rel(front, app,)
+Rel(user, front, "Настройка умного дома")
+
+
+@enduml

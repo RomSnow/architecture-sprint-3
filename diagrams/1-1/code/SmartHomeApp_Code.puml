@@ -1,0 +1,26 @@
+@startuml
+
+class HeatingSystemDto {
+    +Long id;
+    +boolean isOn;
+    +double targetTemperature;
+    +double currentTemperature;
+}
+
+class HeatingSystem{
+    +Long id;
+    +boolean isOn;
+    +double targetTemperature;
+    +double currentTemperature;
+}
+
+class TemperatureSensor {
+    +Long id;
+    +double currentTemperature;
+    +LocalDateTime lastUpdate;
+}
+
+HeatingSystemDto -> HeatingSystem: convert
+HeatingSystemDto -> TemperatureSensor: convert
+
+@enduml
