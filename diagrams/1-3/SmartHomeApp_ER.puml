@@ -37,6 +37,13 @@ class Telemetry {
     +description: string
 }
 
+class TelemetryConfiguration {
+    +id: uuid
+    +telemetryId: Telemetry
+    +eventCode: string
+    +reaction: DeviceCommand[]
+}
+
 class Script {
     +id: uuid
     +title: string
@@ -49,6 +56,8 @@ UserDevice ||--|| User
 UserDevice ||--|| Device
 Device --{ DeviceCommand
 Telemetry }--|| UserDevice
+Telemetry -- TelemetryConfiguration
+TelemetryConfiguration --{ DeviceCommand
 Script -- User
 Script -- DeviceCommand: include
 

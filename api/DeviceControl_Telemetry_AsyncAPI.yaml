@@ -1,0 +1,42 @@
+asyncapi: 2.0.0
+info:
+    title: Telemetry Service Async API
+    version: 1.0.0
+
+channels:
+    telemetry:
+        description: 'Получение данных о показателях телеметрии'
+        subscribe:
+            message:
+                '$ref': '#/components/schemas/Telemetry'
+
+    telemetryReaction:
+      description: 'Генерация событий, вызванных изменениями показателей телеметрии'
+      publish:
+          message:
+              '$ref': '#/components/schemas/TelemetryEvent'
+
+components:
+    schemas:
+        Telemetry:
+            type: object
+            properties:
+                deviceId:
+                    type: uuid
+                    description: 'Id устройства пользователя'
+                value:
+                    type: number
+                    description: 'Значение'
+                measure:
+                    type: string
+                    description: 'Мера'
+
+        TelemetryEvent:
+            type: object
+            properties:
+                deviceId:
+                    type: uuid
+                    description: 'Id устройства пользователя'
+                commands:
+                    type: string[]
+                    description: 'Команды для устройства'
