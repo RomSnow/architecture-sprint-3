@@ -1,0 +1,56 @@
+@startuml
+
+class User {
+    +id: uuid
+    +login: string
+    ...other info
+}
+
+class UserDevice {
+    +id: uuid
+    +title: string
+    +device: Device
+    +configuration: json
+    +member: User
+}
+
+class Device {
+    +id: uuid
+    +title: string
+    +protocol: string
+    +manufacturer: string
+    +type: string
+}
+
+class DeviceCommand {
+    +code: string
+    +deviceId: Device
+    +description: string
+}
+
+class Telemetry {
+    +id: uuid
+    +value: number
+    +measure: string
+    +time: timestamp
+    +deviceId: UserDevice
+    +description: string
+}
+
+class Script {
+    +id: uuid
+    +title: string
+    +member: User
+    +commands: DeviceCommand[]
+    +isActive: boolean
+}
+
+UserDevice ||--|| User
+UserDevice ||--|| Device
+Device --{ DeviceCommand
+Telemetry }--|| UserDevice
+Script -- User
+Script -- DeviceCommand: include
+
+
+@enduml
