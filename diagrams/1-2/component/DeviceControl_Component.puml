@@ -1,0 +1,17 @@
+@startuml
+!include ../../C4/C4_Component.puml
+
+System(kafka, "Event Bus", "Kafka")
+System_Boundary(system, "Device Control Service",) {
+    Component(deviceCommandService, "Device Command Service", "Сервис обработки и создания команд для устройств")
+    Component(deviceCommandScheduler, "Device Command Scheduler", "Отслеживание регулярных команд специфичных для устройства")
+    Component(deviceRepo, "Device Repo",)
+    ComponentDb(db, "Database", "Postgres")
+}
+
+Rel(deviceCommandService, deviceRepo,)
+Rel(deviceCommandScheduler, deviceRepo,)
+Rel(deviceCommandScheduler, deviceCommandService,)
+Rel(deviceRepo, db,)
+BiRel(deviceCommandService, kafka, "Считывания задач для устройств/Отправка команд в адаптеры")
+@enduml

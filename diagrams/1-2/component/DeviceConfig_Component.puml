@@ -1,0 +1,22 @@
+@startuml
+!include ../../C4/C4_Component.puml
+
+System_Ext(front, "Web App")
+System(kafka, "Event Bus", "Kafka")
+System_Boundary(system, "Device Config", "Сервис для управления устройствами") {
+    Component(deviceController, "Device Controller", "Контроллер настройки и подключения устройств")
+    Component(deviceRegistrationService, "Device Registration Service", "Сервис подключения устройств")
+    Component(deviceConfigService, "Device Config Service", "Сервис настройки устройств")
+    Component(deviceRepo, "Device Repo Repository", "Репозиторий сценариев пользователя")
+    ComponentDb(db, "Database", "Postgres")
+}
+
+Rel(front, deviceController,)
+Rel(deviceController, deviceRegistrationService,)
+Rel(deviceController, deviceConfigService,)
+Rel(deviceRegistrationService, deviceRepo,)
+Rel(deviceConfigService, deviceRepo,)
+Rel(deviceRegistrationService, kafka, "Регистрация устройства в системе")
+Rel(deviceRepo, db,)
+
+@enduml

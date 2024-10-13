@@ -1,0 +1,22 @@
+@startuml
+!include ../../C4/C4_Component.puml
+
+System_Ext(sensors, "Sensors", "Датчики с системы, установленные у пользователя")
+System_Ext(front, "Web App")
+System_Boundary(system, "Smart Home App", "Серверное приложение") {
+    Component(heatingSystemController, "Heating System Controller", "Контроллер управления отоплением")
+    Component(heatingSystemService, "Heating System Service", "Сервис управления отоплением")
+    Component(heatingSystemRepo, "Heating System Repository", "Репозиторий данными управления отоплением")
+    Component(tempSensorRepo, "Temperature Sensor Repository", "Репозиторий данных датчиков")
+    ComponentDb(db, "Database", "Postgres")
+}
+
+Rel(front, heatingSystemController, "Выставление температуры, вкл/выкл")
+Rel(heatingSystemController, heatingSystemService,)
+Rel(heatingSystemService, tempSensorRepo, "Хранение данных датчиков")
+Rel(heatingSystemService, heatingSystemRepo, "Хранение конфигурации систем отопления")
+Rel(heatingSystemService, sensors, "Управление, запрос показателей")
+Rel(heatingSystemRepo, db,)
+Rel(tempSensorRepo, db,)
+
+@enduml

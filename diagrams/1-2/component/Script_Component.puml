@@ -1,0 +1,21 @@
+@startuml
+!include ../../C4/C4_Component.puml
+
+System_Ext(front, "Web App")
+System(kafka, "Event Bus", "Kafka")
+System_Boundary(system, "Script", "Сервис для управления сценариями") {
+    Component(scriptController, "Script Controller", "Контроллер управления пользовательскими сценариями")
+    Component(scriptConfigService, "Script Config Service", "Сервис настройки сценариев")
+    Component(scriptScheduler, "ScriptScheduler", "Обработчик сценариев")
+    Component(scriptsRepo, "Script Repository", "Репозиторий сценариев пользователя")
+    ComponentDb(db, "Database", "Postgres")
+}
+
+Rel(front, scriptController,)
+Rel(scriptController, scriptConfigService,)
+Rel(scriptConfigService, scriptsRepo,)
+Rel(scriptScheduler, scriptsRepo,)
+Rel(scriptScheduler, kafka, "Команды для исполнения для реализации сценария")
+Rel(scriptsRepo, db,)
+
+@enduml
