@@ -1,0 +1,67 @@
+openapi: 3.0.0
+
+info:
+    title: Telemetry
+    description: Telemetry Service
+    version: 1.0.0
+
+paths:
+    /telemetry/{userDeviceId}:
+        get:
+            description: Get last telemetry value
+            operationId: getTelemetry
+            responses:
+                200:
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/TelemetryValue'
+                404:
+                    description: Device not found
+
+    /telemetry/history/{userDeviceId}:
+        post:
+          description: Get telemetry data for the period
+          requestBody:
+            description: Body with filters
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/TelemetryHistoryRequest'
+          responses:
+            200:
+              description: Success
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/TelemetryHistoryResponse'
+            404:
+              description: Device not found
+
+components:
+  schemas:
+    TelemetryValue:
+      type: object
+      properties:
+        device:
+          type: uuid
+        value:
+          type: number
+        measure:
+          type: string
+        datetime:
+          type: timestamp
+    TelemetryHistoryRequest:
+      type: object
+      properties:
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+    TelemetryHistoryResponse:
+      type: list
+      items:
+        $ref: '#/components/schemas/TelemetryValue'

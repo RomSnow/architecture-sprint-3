@@ -1,0 +1,22 @@
+@startuml
+!include ../../C4/C4_Component.puml
+
+System_Ext(front, "Web App")
+System_Boundary(system, "Client", "Сервис для взаимодействия с Web клиентом") {
+    Component(userController, "User Controller", "Контроллер управления пользовательским окружением")
+    Component(userInfoService, "User Info Service", "Сервис данных пользователя")
+    Component(userHomeService, "User Home Service", "Сервис настройки дома")
+    Component(userInfoRepo, "User Info Repository", "Репозиторий данных пользователя")
+    Component(userHomeRepo, "User Home Repository", "Репозиторий настройки дома")
+    ComponentDb(db, "Database", "Postgres")
+}
+
+Rel(front, userController,)
+Rel(userController, userHomeService,)
+Rel(userController, userInfoService,)
+Rel(userHomeService, userHomeRepo,)
+Rel(userInfoService, userInfoRepo,)
+Rel(userHomeRepo, db,)
+Rel(userInfoRepo, db,)
+
+@enduml

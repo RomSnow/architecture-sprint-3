@@ -1,0 +1,60 @@
+@startuml
+!include ../../C4/C4_Container.puml
+
+System_Ext(sensors, "IoT", "Датчики с системы, установленные у пользователя")
+
+ContainerQueue(kafka, "Event Bus", "Kafka", "Передача сообщений-событий между сервисами")
+
+System_Boundary(adapters, "Адаптеры"){
+    System(xProtocolAdapter, "X Protocol Adapter", "Адаптер для взаимодействия с устройствами по протоколу X")
+    System(yProtocolAdapter, "Y Protocol Adapter", "Адаптер для взаимодействия с устройствами по протоколу Y")
+}
+
+Rel(sensors, adapters, "Регистрация устройства, передача данных с датчиков")
+Rel(adapters, sensors,  "Отправка команд")
+BiRel(adapters, kafka, "Передача данных с устройств/Считывание команд на исполнение")
+
+
+System_Boundary(deviceConfig, "Device Config"){
+    System(deviceConfigService, "Device Config Service", "Регистрация и настройка подключенных устройств")
+    ContainerDb(deviceConfigDb, "Database", "Postgres", "Данные и конфигурации устройств")
+}
+
+BiRel(deviceConfig, kafka, "Регистрация устройств/Отправка данных об устройствах по требованию")
+
+System_Boundary(deviceControl, "Device Control"){
+    System(deviceControlService, "Device Control Service", "Управление устройствами устройств")
+    ContainerDb(deviceControlDb, "Database", "Postgres", "Мета данные для управления")
+}
+
+BiRel(deviceControl, kafka, "Считывание событий для устройств/Отправка команд в адаптеры")
+
+System_Boundary(telemetry, "Telemetry"){
+    System(telemetryService, "Telemetry Service", "Сервис хранения и считывания показаний счетчиков")
+    ContainerDb(telemetryDb, "Database", "Postgres", "Данные с сенсоров")
+}
+
+Rel(kafka, telemetry, "Запись показаний счетчиков")
+
+System_Boundary(script, "Script"){
+    System(scriptService, "Script Service", "Сервис пользовательских сценариев")
+    ContainerDb(scriptDb, "Database", "Postgres", "Пользовательские сценарии")
+}
+
+BiRel(script, kafka, "Создание событий для реализации сценариев")
+
+System_Boundary(client, "Client"){
+    System(frontService, "Front Service", "Сервис для взаимодействия с Web клиентом")
+    ContainerDb(frontDb, "Database", "Postgres", "Данные пользователей")
+}
+
+System_Ext(front, "Web App", "Веб клиент для управления умным домом")
+System(gw, "API Gateway", "")
+Rel(front, gw, "")
+
+Rel(gw, client, "Управление пользовательскими настройками")
+Rel(gw, deviceConfig, "Управление устройствами")
+Rel(gw, script, "Управление пользовательскими сценариями")
+Rel(gw, telemetry, "Запрос показателей счетчиков")
+
+@enduml

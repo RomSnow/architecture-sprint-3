@@ -1,0 +1,18 @@
+@startuml
+!include ../../C4/C4_Component.puml
+
+System(kafka, "Event Bus", "Kafka")
+System_Ext(front, "Web Api")
+System_Boundary(system, "Telemetry", "Сервис для управления телеметрией") {
+    Component(telemetryController, "Telemetry Controller", "Контроллер телеметрий")
+    Component(telemetryService, "Telemetry Service", "Сервис для управления телеметрией")
+    Component(telemetryRepo, "Telemetry Repo",)
+    ComponentDb(db, "Database", "Postgres")
+}
+
+Rel(front, telemetryController,)
+Rel(telemetryController, telemetryService,)
+Rel(telemetryService, telemetryRepo,)
+Rel(telemetryRepo, db,)
+Rel(kafka, telemetryService, "Уведомление об изменениях в показателях")
+@enduml

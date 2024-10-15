@@ -1,0 +1,86 @@
+@startuml
+
+class User {
+    +id: uuid
+    +login: string
+    ...other info
+}
+
+class UserDevice {
+    +id: uuid
+    +title: string
+    +device: Device
+    +configuration: json
+    +member: User
+    ---
+    данные о конкретном устройстве
+     пользователя определенной модели
+}
+
+class DeviceModel {
+    +id: uuid
+    +title: string
+    +protocol: string
+    +manufacturer: string
+    +type: string
+  ---
+    модель устройства и ее характеристики
+}
+
+class DeviceCommand {
+    +code: string
+    +deviceId: Device
+    +description: string
+}
+
+class Telemetry {
+    +id: uuid
+    +value: number
+    +measure: string
+    +time: timestamp
+    +deviceId: UserDevice
+    +description: string
+}
+
+class TelemetryConfiguration {
+    +id: uuid
+    +telemetryId: Telemetry
+    +eventCode: string
+    +reaction: DeviceCommand[]
+}
+
+class Script {
+    +id: uuid
+    +title: string
+    +member: User
+    +commands: DeviceCommand[]
+    +isActive: boolean
+}
+
+class Home {
+    +id: uuid
+    +member: User
+    +title: string
+}
+
+class Room {
+    +id: uuid
+    +title: string
+    +home: Home
+    +devices: UserDevice[]
+}
+
+UserDevice ||--|| User
+UserDevice ||--|| DeviceModel
+DeviceModel --{ DeviceCommand
+Telemetry }--|| UserDevice
+Telemetry -- TelemetryConfiguration
+TelemetryConfiguration --{ DeviceCommand
+Script -- User
+Script -- DeviceCommand: include
+User --{ Home
+Home --{ Room
+Room --{ UserDevice
+
+
+@enduml

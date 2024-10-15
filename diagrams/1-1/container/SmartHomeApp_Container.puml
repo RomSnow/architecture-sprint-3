@@ -1,0 +1,15 @@
+@startuml
+!include ../../C4/C4_Container.puml
+
+System_Ext(sensors, "Sensors", "Датчики с системы, установленные у пользователя")
+System_Ext(front, "Web App", "Веб клиент для управления умным домом")
+
+System(app, "Smart Home App", "Серверное приложение")
+
+ContainerDb(db, "Database", "Postgres", "Хранит настройки и показания датчиков")
+
+Rel(app, db, "Запись и получение данных настроек, сохранение показаний")
+Rel(app, sensors, "Запрос показателей, выставление настроек, подключение устройств")
+Rel(front, app, "Настройка умного дома")
+
+@enduml
